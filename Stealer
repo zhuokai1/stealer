@@ -7,7 +7,7 @@ local UserInputService = game:GetService("UserInputService")
 -- ========== CONFIGURATIONS (Easy Access) ==========
 local DEBUG = false  -- Set to true to enable debug messages
 local baseTpAmt = 70  -- Base teleport amount, will be updated by ping calculation
-local void = CFrame.new(0, -3.4028234663852886e+38, 0)  -- Enhanced void position
+local void = CFrame.new(0, -9e+400, 0)  -- Enhanced void position
 local voidTeleports = 2  -- Number of void teleports
 local insideOffset = Vector3.new(0, 5, 0)  -- Removed (was for inside teleport)
 local descentHeight = 3  -- Start 3 studs above and descend exactly 3 studs
