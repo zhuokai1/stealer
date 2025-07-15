@@ -7,7 +7,7 @@ local UserInputService = game:GetService("UserInputService")
 -- ========== CONFIGURATIONS (Easy Access) ==========
 local DEBUG = false  -- Set to true to enable debug messages
 local baseTpAmt = 70  -- Base teleport amount, will be updated by ping calculation
-local void = CFrame.new(0, -9e+400, 0)  -- Enhanced void position
+local void = CFrame.new(0, -1000, 0)  -- Enhanced void position
 local voidTeleports = 2  -- Number of void teleports
 local insideOffset = Vector3.new(0, 5, 0)  -- Removed (was for inside teleport)
 local descentHeight = 3  -- Start 3 studs above and descend exactly 3 studs
@@ -193,7 +193,7 @@ local function EnhancedTeleport(target, statusLabel, teleportType)
     return success
 end
 
--- Main delivery teleport function
+-- Main delivery teleport function (Original Method)
 local function DeliverBrainrot(statusLabel)
     local hitbox = FindDelivery()
     if not hitbox then 
@@ -204,7 +204,34 @@ local function DeliverBrainrot(statusLabel)
     end
     
     local target = hitbox.CFrame * CFrame.new(0, -3, 0)
-    EnhancedTeleport(target, statusLabel, "Delivery")
+    
+    if statusLabel then
+        statusLabel.Text = "Teleporting to delivery..."
+    end
+    
+    -- Phase 1: Gradual descent teleportation to target (Original Method)
+    local currentTpAmt = tpAmt or baseTpAmt
+    local descentPerTeleport = descentHeight / currentTpAmt  -- Descend exactly 3 studs over all teleports
+    
+    for i = 1, currentTpAmt do
+        local currentHeight = descentHeight - (descentPerTeleport * (i - 1))
+        local currentTarget = target + Vector3.new(0, currentHeight, 0)
+        TP(currentTarget)
+    end
+    
+    -- Phase 2: Void teleportation (anti-detection)
+    for _ = 1, voidTeleports do
+        TP(void)
+    end
+    
+    -- Phase 3: Final positioning teleports
+    for i = 1, math.floor(currentTpAmt / 16) do
+        TP(target)
+    end
+    
+    if statusLabel then
+        statusLabel.Text = "Delivery complete"
+    end
 end
 
 
